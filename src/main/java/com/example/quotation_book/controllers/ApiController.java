@@ -1,63 +1,21 @@
 package com.example.quotation_book.controllers;
 
-import com.example.quotation_book.repositories.QuoteRepository;
-import com.example.quotation_book.services.QuoteService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import com.example.quotation_book.models.Quote;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-@RestController
 @RequestMapping("/api")
-public class ApiController {
-
-    @Autowired
-    private QuoteService quoteService;
-    @Autowired
-    private QuoteRepository quoteRepository;
-
-
+public interface ApiController {
     @GetMapping("/all")
-    public ResponseEntity<List<Quote>> getAll(@RequestParam(required = false, defaultValue = "1") String page) {
-        int _page = 1;
-        try {
-            _page = Integer.parseInt(page);
-        } catch (Exception ignored) {
-        }
-        Page<Quote> res = quoteRepository.findAll(PageRequest.of(_page - 1, 5));
-        return new ResponseEntity<>(res.stream().collect(Collectors.toList()), HttpStatus.OK);
-    }
-
+    ResponseEntity<List<Quote>> getAll(@RequestParam(required = false, defaultValue = "1") String page);
     @GetMapping("/page")
-    public ResponseEntity<List<Quote>> getPage(@RequestParam(required = false, defaultValue = "1") String page) {
-        int _page = 1;
-        try {
-            _page = Integer.parseInt(page);
-        } catch (Exception ignored) {
-        }
-        List<Quote> res = quoteService.getPage(_page);
-        return new ResponseEntity<>(res, HttpStatus.OK);
-    }
-
+    ResponseEntity<List<Quote>> getPage(@RequestParam(required = false, defaultValue = "1") String page);
     @GetMapping("/{id}")
-    public ResponseEntity<Quote> getById(@PathVariable("id") int id) {
-        Quote res = quoteService.getById(id);
-        if (res == null)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return new ResponseEntity<>(res, HttpStatus.OK);
-    }
-
+    ResponseEntity<Quote> getById(@PathVariable("id") int id);
     @GetMapping("/random")
-    public ResponseEntity<Quote> getRandom() {
-        var res = quoteService.getRandom();
-        return new ResponseEntity<>(res, HttpStatus.OK);
-    }
-
+    ResponseEntity<Quote> getRandom();
 }

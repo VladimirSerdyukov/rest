@@ -13,27 +13,12 @@ package com.example.quotation_book;
 соответствующую таблицу, методы итерирования “вперед”/”назад” по
 цитатам в интерфейсе бота
 * */
-import com.example.quotation_book.services.ParsService;
-import com.example.quotation_book.services.QuoteService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class QuotationBookApplication implements CommandLineRunner {
-
-	@Autowired
-	ParsService parsService;
-	@Autowired
-	QuoteService quoteService;
-
+public class QuotationBookApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(QuotationBookApplication.class, args);
-	}
-
-	@Override
-	public void run(String... args) throws Exception {
-
 	}
 }

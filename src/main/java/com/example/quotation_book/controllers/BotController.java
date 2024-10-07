@@ -2,8 +2,8 @@ package com.example.quotation_book.controllers;
 
 import com.example.quotation_book.models.Chat;
 import com.example.quotation_book.models.Quote;
-import com.example.quotation_book.repositories.ChatRepository;
-import com.example.quotation_book.services.QuoteService;
+import com.example.quotation_book.services.ChatServiceImpl;
+import com.example.quotation_book.services.QuoteServiceImpl;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
@@ -15,13 +15,13 @@ import java.util.Optional;
 
 @Controller
 public class BotController {
-
-    @Autowired
-    ChatRepository chatRepository;
-    @Autowired
-    QuoteService quoteService;
+    ChatServiceImpl chatServiceImpl;
+    QuoteServiceImpl quoteServiceImpl;
     private final TelegramBot bot;
-    public BotController() {
+    @Autowired
+    public BotController(ChatServiceImpl chatServiceImpl, QuoteServiceImpl quoteServiceImpl) {
+        this.chatServiceImpl = chatServiceImpl;
+        this.quoteServiceImpl = quoteServiceImpl;
         String token = "6676249918:AAHBSc0XBWM4rb4LXl_G5eXj-4kPsTK3lHg";
         // name "t_e_s_t_i_n_g_j_a_v_a_bot"
 
@@ -32,14 +32,13 @@ public class BotController {
             }
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
-
     }
 
     private void handleUpdate(Update update) {
         String text = update.message().text();
         Long chatId = update.message().chat().id();
         System.out.println("chatId: " + chatId);
-        Optional<Chat> rawChat = chatRepository.findByChatIdEquals(chatId);
+        Optional<Chat> rawChat = chatServiceImpl.findByChatIdEquals(chatId);
         Chat chat;
 
         if(rawChat.isPresent()) {
@@ -48,7 +47,7 @@ public class BotController {
             Chat _chat = new Chat();
             _chat.setChatId(chatId);
             _chat.setLastId(2);
-            chat = chatRepository.save(_chat);
+            chat = chatServiceImpl.save(_chat);
         }
 
         switch (text) {
@@ -69,7 +68,7 @@ public class BotController {
     }
 
     private void sendRandomQuote(Chat chat) {
-        Quote quote = quoteService.getRandom();
+        Quote quote = quoteServiceImpl.getRandom();
         sendText(chat.getChatId(), quote.getText());
     }
 
@@ -79,10 +78,10 @@ public class BotController {
         while(quote == null) {
             newId--;
             if(newId < 2) newId = 19005;
-            quote = quoteService.getById(newId);
+            quote = quoteServiceImpl.getById(newId);
         }
         chat.setLastId(quote.getQuoteId());
-        chatRepository.save(chat);
+        chatServiceImpl.save(chat);
         sendText(chat.getId(), quote.getText());
     }
 
@@ -92,10 +91,10 @@ public class BotController {
         while(quote == null) {
             newId++;
             if(newId > 19005) newId = 2;
-            quote = quoteService.getById(newId);
+            quote = quoteServiceImpl.getById(newId);
         }
         chat.setLastId(quote.getQuoteId());
-        chatRepository.save(chat);
+        chatServiceImpl.save(chat);
         sendText(chat.getChatId(), quote.getText());
     }
 
