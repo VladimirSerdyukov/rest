@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @RestController
 public class ApiControllerImpl implements ApiController {
-    private QuoteService quoteService;
+    private final QuoteService quoteService;
     @Autowired
     public ApiControllerImpl(QuoteService quoteService) {
         this.quoteService = quoteService;

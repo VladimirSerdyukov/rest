@@ -37,7 +37,7 @@ public class ParsServiceImpl implements ParsService {
             String realId = sourceQuote.select("b").first().text();
             if (realId.equals("#???")) return null;
             String text = sourceQuote.select(".quotbody").first().text();
-            return new AbstractMap.SimpleEntry<Integer, String>(id, text);
+            return new AbstractMap.SimpleEntry<>(id, text);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -52,7 +52,7 @@ public class ParsServiceImpl implements ParsService {
             if (realId.equals("#???")) return null;
             String text = sourceQuote.select(".quotbody").first().text();
             System.out.println("RealId: " + realId + " text: " + text);
-            return new AbstractMap.SimpleEntry<Integer, String>(Integer.parseInt(realId.substring(1)), text);
+            return new AbstractMap.SimpleEntry<>(Integer.parseInt(realId.substring(1)), text);
         } catch (IOException e) {
             e.printStackTrace();
         }
